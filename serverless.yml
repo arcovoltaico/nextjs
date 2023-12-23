@@ -1,0 +1,55 @@
+service:word
+# app and org for use with dashboard.serverless.com
+app: xxxxx
+org: xxxxx
+
+useDotenv: true
+#custom:
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: dev
+  region: eu-west-1
+#  apiGateway: ${file(providers/api-gateway.yml)}
+#  iam: ${file(providers/iam.yml)}
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-jetpack
+  - serverless-offline
+  - serverless-iam-roles-per-function
+
+functions:
+  api:
+    handler: dist/src/main.handler
+    events:
+      - http:
+#          method: any
+#          path: /{proxy+}
+          method: get
+          path: word
+
+      - http:
+          method: get
+          path: word/{id}
+
+      - http:
+          method: patch
+          path: word/{id}
+
+      - http:
+          method: post
+          path: word
+      - http:
+          method: delete
+          path: word
+
+package:
+  patterns:
+    - '!**'
+    - package.json
+    - package-lock.json
+    - dist/**
+    - config/production.js
